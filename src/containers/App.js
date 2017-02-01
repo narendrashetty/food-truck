@@ -4,10 +4,6 @@ import { bindActionCreators } from 'redux';
 
 export const App = React.createClass({
 
-  getInitialState() {
-    
-  },
-
   componentDidMount() {
 
   },

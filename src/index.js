@@ -5,7 +5,7 @@ import { hashHistory, match, Router } from 'react-router';
 import routes from './routes';
 import configureStore from './store';
 
-const store = configureStore(preloadedState);
+const store = configureStore();
 
 match({ 
   'history': hashHistory,
