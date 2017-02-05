@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
+import Trucks from './trucks';
 
 const rootReducer = combineReducers({
-  test(state = {}) {
-  	return state;
-  }
+  Trucks
 });
 
 export default rootReducer;

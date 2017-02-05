@@ -1,32 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import actions from '../actions';
+import Map from '../components/map';
 
 export const App = React.createClass({
 
   componentDidMount() {
-
+  	this.props.actions.fetchData();
   },
 
   render() {
     return (
       <div className="fullHeight fullWidth">
-        
+        <Map />
       </div>
     );
   }
 });
 
-export default App;
+function mapStateToProps() {
+  return {};
+}
 
-// function mapStateToProps() {
-//   return {};
-// }
+function mapDispatchToProps(dispatch) {
+  return {
+    'actions': bindActionCreators(actions, dispatch)
+  };
+}
 
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     'actions': bindActionCreators(actions, dispatch)
-//   };
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
