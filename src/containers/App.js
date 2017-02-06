@@ -13,14 +13,14 @@ export const App = React.createClass({
   render() {
     return (
       <div className="fullHeight fullWidth">
-        <Map />
+        <Map Trucks={this.props.Trucks} />
       </div>
     );
   }
 });
 
-function mapStateToProps() {
-  return {};
+function mapStateToProps(state) {
+  return state;
 }
 
 function mapDispatchToProps(dispatch) {
