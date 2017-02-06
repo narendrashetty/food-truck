@@ -57,25 +57,10 @@ const Map = React.createClass({
   },
 
   renderDots(config) {
-    const sourceProject = config.project([-122.442066, 37.755779]);
-
-    var xstart = sourceProject[0] - (config.width / 2);
-    var xend = sourceProject[0] + (config.width / 2) - 10;
-    var ystart = sourceProject[1] - (config.height / 2);
-    var yend = sourceProject[1] + (config.height / 2) - 10;
-
-    // var west = config.unproject([xstart, sourceProject[1]]);
-    // var east = config.unproject([sourceProject[1], xend]);
-
-    // var north = config.unproject([ystart, sourceProject[0]]);
-    // var south = config.unproject([sourceProject[0], yend]);
-
     if (!this.props.Trucks.get('isLoading')) {
       const bounds = this.refs.map._map.getBounds();
       const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
-      // this.props.actions.computeVisible({north, south, east, west})      
       const points = this.props.Trucks.get('cluster').getClusters(bbox, this.state.viewport.zoom);
-      console.log(points);
       return (
         <div>
           {points.map((loc, index) => {
