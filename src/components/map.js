@@ -3,7 +3,6 @@ import MapGL from 'react-map-gl';
 import Dimensions from 'react-dimensions';
 import HTMLOverlay from 'react-map-gl/dist/overlays/html.react.js';
 import ViewportMercator from 'viewport-mercator-project';
-import Cluster from '../utils/cluster';
 
 const CONFIG = {
   'mapStyle': 'mapbox://styles/mapbox/basic-v9',
@@ -44,8 +43,7 @@ const Map = React.createClass({
         latitude,
         longitude,
       },
-      'isLoading': false,
-      'cluster': Cluster()
+      'isLoading': false
     });
     
   },
@@ -59,26 +57,6 @@ const Map = React.createClass({
   },
 
   renderDots(config) {
-    var cluster = Cluster().load(this.props.Trucks.map((obj, i) => {
-      const xy = config.project(obj.location.coordinates);
-      return {
-        x: xy[0],
-        y: xy[1],
-        zoom: Infinity, // the last zoom the cluster was processed at
-
-        // point id: index of the source feature in the original input array
-        // cluster id: index of the first child of the cluster in the zoom level tree
-        id: i,
-
-        parentId: -1, // parent cluster id
-        numPoints: 1
-      };
-    }) || []);
-
-
-
-
-
     const sourceProject = config.project([-122.442066, 37.755779]);
 
     var xstart = sourceProject[0] - (config.width / 2);
@@ -86,24 +64,37 @@ const Map = React.createClass({
     var ystart = sourceProject[1] - (config.height / 2);
     var yend = sourceProject[1] + (config.height / 2) - 10;
 
-    var a = config.unproject([0,sourceProject[1]]);
-    var b = config.unproject([xend, sourceProject[1]]);
+    // var west = config.unproject([xstart, sourceProject[1]]);
+    // var east = config.unproject([sourceProject[1], xend]);
 
-    var c = config.unproject([sourceProject[1], 0]);
-    var d = config.unproject([sourceProject[1], yend]);  
-    
-    console.log(cluster.getClusters([a[0], d[1], b[0], c[1]], this.state.viewport.zoom));
-    return (
-        <div className="marker" style={{
-          'top': yend,
-          'left': sourceProject[0],
-          'position': 'absolute',
-          'background': '#000',
-          'width': '10px',
-          'height': '10px'
-        }}>
+    // var north = config.unproject([ystart, sourceProject[0]]);
+    // var south = config.unproject([sourceProject[0], yend]);
+
+    if (!this.props.Trucks.get('isLoading')) {
+      const bounds = this.refs.map._map.getBounds();
+      const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+      // this.props.actions.computeVisible({north, south, east, west})      
+      const points = this.props.Trucks.get('cluster').getClusters(bbox, this.state.viewport.zoom);
+      console.log(points);
+      return (
+        <div>
+          {points.map((loc, index) => {
+            const locProject = config.project(loc.geometry.coordinates);
+            return (
+              <div key={index} className="marker" style={{
+                'top': locProject[1],
+                'left': locProject[0],
+                'position': 'absolute',
+                'background': '#000',
+                'width': '10px',
+                'height': '10px'
+              }}>
+              </div>
+            );
+          })}
         </div>
-    );
+      );
+    }
   },
 
   renderOverlay() {
@@ -125,6 +116,7 @@ const Map = React.createClass({
   renderMap() {
     return (
       <MapGL
+        ref="map"
         {...this.state.viewport}
         onChangeViewport={(newViewport) => {
           this.setState({

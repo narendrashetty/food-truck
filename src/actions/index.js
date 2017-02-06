@@ -45,5 +45,12 @@ export default {
           return dispatch(handler.success(json));
         });
     };
+  },
+
+  computeVisible(data) {
+    return {
+      'type': types.COMPUTE_VISIBLE,
+      data
+    };
   }
 };

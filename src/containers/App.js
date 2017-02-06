@@ -13,7 +13,7 @@ export const App = React.createClass({
   render() {
     return (
       <div className="fullHeight fullWidth">
-        <Map Trucks={this.props.Trucks} />
+        <Map Trucks={this.props.Trucks} actions={this.props.actions} />
       </div>
     );
   }
