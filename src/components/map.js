@@ -5,7 +5,7 @@ import HTMLOverlay from 'react-map-gl/dist/overlays/html.react.js';
 import ViewportMercator from 'viewport-mercator-project';
 
 const CONFIG = {
-  'mapStyle': 'mapbox://styles/mapbox/basic-v9',
+  'mapStyle': 'mapbox://styles/mapbox/dark-v9',
   'mapboxApiAccessToken': 'pk.eyJ1IjoibmFyZW5kcmFzaGV0dHkiLCJhIjoiY2l3am9veHJ2MDAwbDJ0cjI1NTkyM3llNSJ9.l2l38Z5jAyCO0_aOE-ABlA',
   'zoom': 12,
   'startDragLngLat': null,
@@ -56,6 +56,23 @@ const Map = React.createClass({
     );
   },
 
+  renderMarker(config, loc, index) {
+    const locProject = config.project(loc.geometry.coordinates);
+    return (
+      <div>
+      <div key={index} className="marker" style={{
+        'top': locProject[1] - 15,
+        'left': locProject[0] - 15
+      }}>
+      </div>
+      <div className="pulse" style={{
+        'top': locProject[1] - 15,
+        'left': locProject[0] - 15
+      }}></div>
+      </div>
+    );
+  },
+
   renderDots(config) {
     if (!this.props.Trucks.get('isLoading')) {
       const bounds = this.refs.map._map.getBounds();
@@ -64,18 +81,9 @@ const Map = React.createClass({
       return (
         <div>
           {points.map((loc, index) => {
-            const locProject = config.project(loc.geometry.coordinates);
-            return (
-              <div key={index} className="marker" style={{
-                'top': locProject[1],
-                'left': locProject[0],
-                'position': 'absolute',
-                'background': '#000',
-                'width': '10px',
-                'height': '10px'
-              }}>
-              </div>
-            );
+            if (loc.type !== 'Feature') {
+              return this.renderMarker(config, loc, index);
+            }
           })}
         </div>
       );

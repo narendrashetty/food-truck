@@ -15,7 +15,9 @@ export default function(state = initialState, action) {
         'isLoading': true
       });
     case types.FETCH_DATA_SUCCESS:
+      var facilitytype = {};
       action.data = action.data.map((loc) => {
+        facilitytype[loc.facilitytype] ? facilitytype[loc.facilitytype]++ : facilitytype[loc.facilitytype] = 1;
         return {
           'facilitytype': loc.facilitytype,
           'geometry': loc.location,
@@ -25,6 +27,7 @@ export default function(state = initialState, action) {
           'fooditems': loc.fooditems
         }
       });
+      console.log(facilitytype);
 
       state = state.merge({
         'isLoading': false,
@@ -32,16 +35,6 @@ export default function(state = initialState, action) {
       });
 
       return state.set('cluster', Cluster().load(action.data));
-
-    case types.COMPUTE_VISIBLE:
-      return state.merge({
-        'dataVisible': state.get('data').filter((loc) => {
-          // 0 is less than east && 1 is greater than east
-          // 0 is less than north && 1 is greater than north
-          // 0 is greater 
-          
-        })
-      });
   }
   return state;
 }
