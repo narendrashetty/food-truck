@@ -59,16 +59,35 @@ const Map = React.createClass({
   renderMarker(config, loc, index) {
     const locProject = config.project(loc.geometry.coordinates);
     return (
-      <div>
       <div key={index} className="marker" style={{
-        'top': locProject[1] - 15,
-        'left': locProject[0] - 15
+        'top': locProject[1] - 10,
+        'left': locProject[0]
       }}>
+        <div className="marker__content"></div>
       </div>
-      <div className="pulse" style={{
-        'top': locProject[1] - 15,
-        'left': locProject[0] - 15
-      }}></div>
+    );
+  },
+
+  renderCluster(config, loc, index) {
+    const locProject = config.project(loc.geometry.coordinates);
+
+    return (
+      <div key={index} style={{
+        'position': 'absolute',
+        'top': locProject[1] - 10,
+        'left': locProject[0],
+      }}>
+        <div className="marker" style={{
+          'transform': 'rotate(-45deg) translate(-5px, -5px) scale(0.8)',
+          'opacity': 0.7
+        }}></div>
+        <div className="marker"  style={{
+          'transform': 'rotate(-45deg) translate(5px, 5px) scale(0.8)',
+          'opacity': 0.7
+        }}></div>
+        <div className="marker">
+          <div className="marker__content">{loc.properties.point_count}</div>
+        </div>
       </div>
     );
   },
@@ -83,6 +102,8 @@ const Map = React.createClass({
           {points.map((loc, index) => {
             if (loc.type !== 'Feature') {
               return this.renderMarker(config, loc, index);
+            } else {
+              return this.renderCluster(config, loc, index);
             }
           })}
         </div>

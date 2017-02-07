@@ -1,7 +1,7 @@
 .marker {
 	position:: absolute;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   border-radius: 50% 50% 50% 0;
   background: #34d2fb;
   position: absolute;
@@ -15,14 +15,22 @@
   // animation-name: bounce;
   // animation-fill-mode: both;
   // animation-duration: 1s;
-  &:after {
+  &__content {
     content: '';
     width: 14px;
     height: 14px;
-    margin: 8px 0 0 8px;
+    // margin: 8px 0 0 8px;
     background: #2F2F2F;
     position: absolute;
     border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    color: #fff;
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+    font-weight: bold;
   }
 }
 

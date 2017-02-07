@@ -16,7 +16,7 @@ function SuperCluster(options) {
 SuperCluster.prototype = {
   options: {
       minZoom: 0,   // min zoom to generate clusters on
-      maxZoom: 16,  // max zoom level to cluster the points on
+      maxZoom: 20,  // max zoom level to cluster the points on
       radius: 40,   // cluster radius in pixels
       extent: 512,  // tile extent (radius is calculated relative to it)
       nodeSize: 64, // size of the KD-tree leaf node, affects performance
