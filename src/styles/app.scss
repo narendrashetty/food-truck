@@ -15,6 +15,13 @@ html, body {
 body {
   overflow: hidden;
 }
+div, input {
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+    border: 0px;
+  }
+}
 .fullHeight, #app {
 	height: 100%;
 }
@@ -23,3 +30,4 @@ body {
 }
 
 @import 'map';
+@import 'search';

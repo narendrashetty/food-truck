@@ -1,0 +1,58 @@
+.searchBox {
+  position: absolute;
+  width: 300px;
+  background: #fff;
+  z-index: 10;
+  top: 20px;
+  left: 20px;
+  padding: 20px;
+
+  &__title {
+    font-weight: bold;
+  }
+
+  &__input {
+    background: #EDEDED;
+    flex-grow: 1;
+    height: 30px;
+    font-size: 12px;
+    border: 0px;
+    padding: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+ul.geosuggest__suggests {
+  padding: 0;
+  list-style-type: none;
+  transition: max-height 0.2s, border 0.2s;
+  max-height: 500px;
+  &--hidden {
+    max-height: 0;
+    overflow: hidden;
+    border-width: 0;
+  }
+}
+
+/**
+ * A geosuggest item
+ */
+.geosuggest__item {
+  font-size: 18px;
+  font-size: 1rem;
+  padding: .5em .65em;
+  cursor: pointer;
+}
+.geosuggest__item:hover,
+.geosuggest__item:focus {
+  background: #f5f5f5;
+}
+.geosuggest__item--active {
+  background: #267dc0;
+  color: #fff;
+}
+.geosuggest__item--active:hover,
+.geosuggest__item--active:focus {
+  background: #ccc;
+}

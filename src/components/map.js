@@ -7,7 +7,6 @@ import ViewportMercator from 'viewport-mercator-project';
 const CONFIG = {
   'mapStyle': 'mapbox://styles/mapbox/dark-v9',
   'mapboxApiAccessToken': 'pk.eyJ1IjoibmFyZW5kcmFzaGV0dHkiLCJhIjoiY2l3am9veHJ2MDAwbDJ0cjI1NTkyM3llNSJ9.l2l38Z5jAyCO0_aOE-ABlA',
-  'zoom': 12,
   'startDragLngLat': null,
   'isDragging': null
 };
@@ -31,13 +30,14 @@ const Map = React.createClass({
   },
 
   setup(props) {
-    let latitude = 37.755779;
-    let longitude = -122.442066;
+    let latitude = props.location[1];
+    let longitude = props.location[0];
     let height = props.containerHeight;
     let width = props.containerWidth;
     this.setState({
       'viewport': {
         ...CONFIG,
+        zoom: props.zoom,
         width,
         height,
         latitude,
@@ -60,10 +60,11 @@ const Map = React.createClass({
     const locProject = config.project(loc.geometry.coordinates);
     return (
       <div key={index} className="marker" style={{
-        'top': locProject[1] - 10,
-        'left': locProject[0]
+        'top': locProject[1] - 14,
+        'left': locProject[0] - 10
       }}>
-        <div className="marker__content"></div>
+        <div className="marker__content">
+        </div>
       </div>
     );
   },
@@ -72,22 +73,11 @@ const Map = React.createClass({
     const locProject = config.project(loc.geometry.coordinates);
 
     return (
-      <div key={index} style={{
-        'position': 'absolute',
-        'top': locProject[1] - 10,
-        'left': locProject[0],
+      <div key={index} className="marker marker--cluster" style={{
+        'top': locProject[1] - 14,
+        'left': locProject[0] - 10
       }}>
-        <div className="marker" style={{
-          'transform': 'rotate(-45deg) translate(-5px, -5px) scale(0.8)',
-          'opacity': 0.7
-        }}></div>
-        <div className="marker"  style={{
-          'transform': 'rotate(-45deg) translate(5px, 5px) scale(0.8)',
-          'opacity': 0.7
-        }}></div>
-        <div className="marker">
-          <div className="marker__content">{loc.properties.point_count}</div>
-        </div>
+        <div className="marker__content"></div>
       </div>
     );
   },
@@ -102,7 +92,22 @@ const Map = React.createClass({
           {points.map((loc, index) => {
             if (loc.type !== 'Feature') {
               return this.renderMarker(config, loc, index);
-            } else {
+            }
+          })}
+        </div>
+      );
+    }
+  },
+
+  renderClusters(config) {
+    if (!this.props.Trucks.get('isLoading')) {
+      const bounds = this.refs.map._map.getBounds();
+      const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+      const points = this.props.Trucks.get('cluster').getClusters(bbox, this.state.viewport.zoom);
+      return (
+        <div>
+          {points.map((loc, index) => {
+            if (loc.type === 'Feature') {
               return this.renderCluster(config, loc, index);
             }
           })}
@@ -114,6 +119,15 @@ const Map = React.createClass({
   renderOverlay() {
     return (
       <div>
+        <HTMLOverlay
+          width={this.state.viewport.width}
+          height={this.state.viewport.height}
+          isDragging={false}
+          redraw={this.renderClusters}
+          zoom={this.state.viewport.zoom}
+          longitude={this.state.viewport.longitude}
+          latitude={this.state.viewport.latitude}
+        />
         <HTMLOverlay
           width={this.state.viewport.width}
           height={this.state.viewport.height}

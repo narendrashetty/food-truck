@@ -1,14 +1,14 @@
 .marker {
-	position:: absolute;
+	position: absolute;
   width: 20px;
   height: 20px;
   border-radius: 50% 50% 50% 0;
-  background: #34d2fb;
+  background: #fbec34;
   position: absolute;
   transform: rotate(-45deg);
   left: 50%;
   top: 50%;
-  margin: -20px 0 0 -20px;
+  // margin: -20px 0 0 -20px;
   pointer-events: all;
   cursor: pointer;
   z-index: 1;
@@ -31,6 +31,10 @@
     line-height: 14px;
     text-align: center;
     font-weight: bold;
+  }
+
+  &--cluster {
+    background: #34d2fb;
   }
 }
 
