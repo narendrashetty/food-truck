@@ -3,6 +3,7 @@ import MapGL from 'react-map-gl';
 import Dimensions from 'react-dimensions';
 import HTMLOverlay from 'react-map-gl/dist/overlays/html.react.js';
 import ViewportMercator from 'viewport-mercator-project';
+import Tooltip from './tooltip'
 
 const CONFIG = {
   'mapStyle': 'mapbox://styles/mapbox/dark-v9',
@@ -17,7 +18,9 @@ const Map = React.createClass({
     return {
       'isLoading': true,
       'viewport': {},
-      'pathTotalLength': 0
+      'pathTotalLength': 0,
+      'showTooltip': false,
+      'tooltipConfig': {}
     };
   },
 
@@ -48,6 +51,16 @@ const Map = React.createClass({
     
   },
 
+  showTooltip(data, position) {
+    this.setState({
+      'showTooltip': true,
+      'tooltipConfig': {
+        data,
+        position
+      }
+    });
+  },
+
   renderLoading() {
     return (
       <div className="fullHeight map__loading">
@@ -59,10 +72,15 @@ const Map = React.createClass({
   renderMarker(config, loc, index) {
     const locProject = config.project(loc.geometry.coordinates);
     return (
-      <div key={index} className="marker" style={{
-        'top': locProject[1] - 14,
-        'left': locProject[0] - 10
-      }}>
+      <div
+        key={index}
+        className="marker"
+        style={{
+          'top': locProject[1] - 14,
+          'left': locProject[0] - 10
+        }}
+        onClick={() => this.showTooltip(loc, locProject)}
+      >
         <div className="marker__content">
         </div>
       </div>
@@ -73,10 +91,14 @@ const Map = React.createClass({
     const locProject = config.project(loc.geometry.coordinates);
 
     return (
-      <div key={index} className="marker marker--cluster" style={{
-        'top': locProject[1] - 14,
-        'left': locProject[0] - 10
-      }}>
+      <div
+        key={index}
+        className="marker marker--cluster"
+        style={{
+          'top': locProject[1] - 14,
+          'left': locProject[0] - 10
+        }}
+      >
         <div className="marker__content"></div>
       </div>
     );
@@ -87,6 +109,7 @@ const Map = React.createClass({
       const bounds = this.refs.map._map.getBounds();
       const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
       const points = this.props.Trucks.get('cluster').getClusters(bbox, this.state.viewport.zoom);
+
       return (
         <div>
           {points.map((loc, index) => {
@@ -137,6 +160,7 @@ const Map = React.createClass({
           longitude={this.state.viewport.longitude}
           latitude={this.state.viewport.latitude}
         />
+        <Tooltip isVisible={this.state.showTooltip} config={this.state.tooltipConfig} />
       </div>
     );
   },
